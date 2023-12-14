@@ -1,0 +1,85 @@
+name: Cmake Auto Build
+
+on:
+  push:
+    paths:
+      - "VERSION"
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "reason"
+        required: true
+        default: "any"
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      # make and build applications
+      - name: build
+        shell: powershell
+        run: |
+          pip install cmake ninja
+          cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+          cmake --build build --config Release
+          curl.exe -sLO https://github.com/kirin123kirin/.vscode/raw/main/bin/signtool.exe
+          curl.exe -sLO https://github.com/kirin123kirin/.vscode/raw/main/bin/certificate.pfx
+          .\signtool.exe sign /f .\certificate.pfx /p ${{ secrets.PASSWORD }} /tr http://timestamp.digicert.com /td SHA256 .\build\*.exe
+          Compress-Archive -Path build/*.exe -Destination build/${{ github.event.repository.name }}.zip
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: buildfiles
+          path: |
+            build/*.exe
+            build/*.zip
+          retention-days: 5
+
+  create:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: version
+        id: version
+        shell: bash --login {0}
+        run: echo "version=$(cat VERSION)" >> $GITHUB_OUTPUT
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: buildfiles
+
+      - name: VirusTotal Monitor Scan
+        id: virustotal
+        uses: crazy-max/ghaction-virustotal@v3
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: ${{ github.event.repository.name }}.exe
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          release_name: Release v${{ steps.version.outputs.version }}
+          draft: false
+          body: |
+            # Virus Total Check result
+            ${{ steps.virustotal.outputs.analysis }}
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.event.repository.name }}.exe
+          asset_name: ${{ github.event.repository.name }}.exe
+          asset_content_type: application/octet-stream

@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "win64_d",
+            "includePath": [
+                ".",
+                "${env:INCLUDE}",
+                "${env:PYTHONPATH}/libs",
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "clang++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-clang-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        },
+    ],
+    "version": 4
+}

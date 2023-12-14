@@ -1,0 +1,76 @@
+{
+  // Variable Example
+  // ${workspaceFolder}	/home/your-username/your-project
+  // ${workspaceFolderBasename}	your-project
+  // ${file}	/home/your-username/your-project/folder/file.ext
+  // ${relativeFile}	folder/file.ext
+  // ${relativeFileDirname}	folder
+  // ${fileBasename}	file.ext
+  // ${fileBasenameNoExtension}	file
+  // ${fileDirname}	/home/your-username/your-project/folder
+  // ${fileExtname}	.ext
+  // ${lineNumber}	VSCodeの編集画面で現在選択されている行番号
+  // ${selectedText}	VSCodeの編集画面で現在選択されているテキスト
+  // ${execPath}	実行中のVS Code実行可能ファイル「code.exe」のアドレス
+  // ${env:xxxxxx} 環境変数
+  // ${config:setting.jsonの値} vscode workspace等で設定した値の参照 例${command:python.interpreterPath}
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: 現在のファイル",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "C++ Debug",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/${fileBasenameNoExtension}",
+      "windows": {
+        "program": "${workspaceFolder}/build/${fileBasenameNoExtension}.exe",
+      },
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "preLaunchTask": "Debug C++",
+      "console": "integratedTerminal",
+    },
+    {
+      "name": "C++ Release",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/${fileBasenameNoExtension}",
+      "windows": {
+        "program": "${workspaceFolder}/build/${fileBasenameNoExtension}.exe",
+      },
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "preLaunchTask": "Release C++",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Instant Debug from py",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "python3",
+      "windows": {
+        "program": "python",
+      },
+      "args": [
+        "${file}"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "console": "integratedTerminal",
+      "preLaunchTask": "Debug Setup.py"
+    },
+  ]
+}
