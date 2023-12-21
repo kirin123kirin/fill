@@ -270,7 +270,7 @@
           // "-save-temps=obj",
           "-D_${workspaceFolderBasename}_EXPORTS",
           "-I${env:PYTHONPATH}/include",
-          "-I${workspaceFolder}/*/include",
+          "-I${workspaceFolder}/include",
           "-I${workspaceFolder}/build/external/include",
           "-I${env:INCLUDE}",
           "-I${workspaceFolder}/${workspaceFolderBasename}/cutil",

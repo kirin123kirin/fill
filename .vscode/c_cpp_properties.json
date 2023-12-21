@@ -13,12 +13,12 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "clang++.exe",
+            "compilerPath": "Y:/bin/clang++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-clang-x64",
             "configurationProvider": "ms-vscode.cmake-tools"
-        },
+        }
     ],
     "version": 4
 }

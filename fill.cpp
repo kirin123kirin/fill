@@ -1,6 +1,6 @@
 #include <windows.h>
-#include "argparser.hpp"
-#include "clipboard.hpp"
+#include <argparser.hpp>
+#include <clipboard.hpp>
 
 const wchar_t delim = L'\t';
 const wchar_t* lineterminator = L"\r\n";
