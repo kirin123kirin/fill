@@ -22,6 +22,7 @@ jobs:
         shell: powershell
         run: |
           pip install cmake ninja
+          git clone https://github.com/kirin123kirin/include.git
           cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
           cmake --build build --config Release
           curl.exe -sLO https://github.com/kirin123kirin/.vscode/raw/main/bin/signtool.exe
